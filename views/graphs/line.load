@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--
+    Code examples below were referenced in the making of this graph:
+    http://bl.ocks.org/phoebebright/3061203
+    http://code.tutsplus.com/tutorials/building-a-multi-line-chart-using-d3js--cms-22935
+    http://chimera.labs.oreilly.com/books/1230000000345/
+-->
+    <meta charset="utf-8">
+    <script type="text/javascript" src="https://d3js.org/d3.v3.min.js"></script>
+
+    <style>
+        .axis path {
+            fill: none;
+            stroke: #777;
+            shape-rendering: crispEdges;
+        }
+
+        .axis text {
+            font-family: sans-serif;
+            font-size: 13px;
+        }
+        .container {
+            text-align: center;
+        }
+
+        rect:hover {
+            fill: orange;
+        }
+
+        #tooltip {
+            position: absolute;
+            width: 200px;
+            height: auto;
+            padding: 10px;
+            background-color: white;
+            -webkit-border-radius: 10px;
+            -moz-border-radius: 10px;
+            border-radius: 10px;
+            -webkit-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+            -moz-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+            box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+            pointer-events: none;
+        }
+
+        #tooltip.hidden {
+            display: none;
+        }
+
+        #tooltip p {
+            margin: 0;
+            font-family: sans-serif;
+            font-size: 16px;
+            line-height: 20px;
+        }
+
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="visualization">
+
+        <svg id="visualisation" width="800" height="400"></svg>
+        <script>
+
+            var formatAsDate = d3.time.format("%Y-%m-%d %H:%M:%S")
+
+            var dataURL = '{{=XML(dataURL,sanitize=True)}}';
+            var data;
+
+            d3.json(dataURL, function (error, json) {
+                if (error) return console.warn(error);
+                data = json;
+                console.log(data)
+                InitChart();
+            });
+
+            function InitChart() {
+
+                var xDomain = d3.extent(data, function (d) {
+                    return formatAsDate.parse(d.readingdate);
+                });
+                var yDomain = d3.extent(data, function (d) {
+                    return d.brewtemp;
+                });
+
+                var vis = d3.select("#visualisation"),
+                        WIDTH = 800,
+                        HEIGHT = 400,
+                        MARGINS = {
+                            top: 70,
+                            right: 20,
+                            bottom: 70,
+                            left: 50
+                        },
+                        xScale = d3.time.scale()
+                                .range([MARGINS.left, WIDTH - MARGINS.right])
+                                .domain(xDomain),
+                        yScale = d3.scale.linear()
+                                .range([HEIGHT - MARGINS.top, MARGINS.bottom])
+                                .domain(yDomain),
+                        xAxis = d3.svg.axis()
+                                .scale(xScale),
+                        yAxis = d3.svg.axis()
+                                .scale(yScale)
+                                .orient("left");
+
+                vis.append("svg:g")
+                        .attr("class", "x axis")
+                        .attr("transform", "translate(0," + (HEIGHT - MARGINS.bottom) + ")")
+                        .call(xAxis);
+                vis.append("svg:g")
+                        .attr("class", "y axis")
+                        .attr("transform", "translate(" + (MARGINS.left) + ",0)")
+                        .call(yAxis);
+                var lineGen = d3.svg.line()
+                        .x(function (d) {
+                            return xScale(formatAsDate.parse(d.readingdate));
+                        })
+                        .y(function (d) {
+                            return yScale(d.brewtemp);
+                        })
+                        .interpolate("basis");
+                vis.append('svg:path')
+                        .attr('d', lineGen(data))
+                        .attr('stroke', 'steelblue')
+                        .attr('stroke-width', 2)
+                        .attr('fill', 'none');
+
+                vis.selectAll(".x text")
+                        .attr("transform", function (d) {
+                            return "translate(" + this.getBBox().height * -2 + "," + this.getBBox().height + ")rotate(-45)";
+                        });
+
+                // now add titles to the axes
+                vis.append("text")
+                        .attr("text-anchor", "middle")
+                        .attr("transform", "translate(" + (MARGINS.left / 4) + "," + (HEIGHT / 2) + ")rotate(-90)")
+                        .text("Temp");
+
+                vis.append("text")
+                        .attr("text-anchor", "middle")
+                        .attr("transform", "translate(" + (WIDTH / 2) + "," + (HEIGHT - (MARGINS.bottom) / 4 + 10) + ")")
+                        .text("Date/time");
+            }
+
+            function type(d) {
+                d.readingdate = formatAsreadingdate.parse(d.readingdate);
+                d.brewtemp = +d.brewtemp;
+                return d;
+            }
+
+
+        </script>
+    </div>
+
+</div>
+
+</body>
+
+</html>
+

@@ -1,0 +1,108 @@
+timestamp: 2016-06-05T17:02:19.507000
+CREATE TABLE auth_user(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    first_name CHAR(128),
+    last_name CHAR(128),
+    email CHAR(512),
+    password CHAR(512),
+    registration_key CHAR(512),
+    reset_password_key CHAR(512),
+    registration_id CHAR(512)
+);
+success!
+timestamp: 2016-06-05T17:02:21.416000
+CREATE TABLE auth_group(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    role CHAR(512),
+    description TEXT
+);
+success!
+timestamp: 2016-06-05T17:02:21.480000
+CREATE TABLE auth_membership(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER REFERENCES auth_user (id) ON DELETE CASCADE  ,
+    group_id INTEGER REFERENCES auth_group (id) ON DELETE CASCADE  
+);
+success!
+timestamp: 2016-06-05T17:02:21.538000
+CREATE TABLE auth_permission(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    group_id INTEGER REFERENCES auth_group (id) ON DELETE CASCADE  ,
+    name CHAR(512),
+    table_name CHAR(512),
+    record_id INTEGER
+);
+success!
+timestamp: 2016-06-05T17:02:21.602000
+CREATE TABLE auth_event(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    time_stamp TIMESTAMP,
+    client_ip CHAR(512),
+    user_id INTEGER REFERENCES auth_user (id) ON DELETE CASCADE  ,
+    origin CHAR(512),
+    description TEXT
+);
+success!
+timestamp: 2016-06-05T17:02:21.697000
+CREATE TABLE auth_cas(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER REFERENCES auth_user (id) ON DELETE CASCADE  ,
+    created_on TIMESTAMP,
+    service CHAR(512),
+    ticket CHAR(512),
+    renew CHAR(1)
+);
+success!
+timestamp: 2016-06-05T17:03:14.769000
+CREATE TABLE brews(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    brewname CHAR(512),
+    brewstyle CHAR(512),
+    brewdate TIMESTAMP,
+    is_active CHAR(1),
+    created_on TIMESTAMP,
+    created_by INTEGER REFERENCES auth_user (id) ON DELETE CASCADE  ,
+    modified_on TIMESTAMP,
+    modified_by INTEGER REFERENCES auth_user (id) ON DELETE CASCADE  
+);
+success!
+timestamp: 2016-06-05T17:03:39.899000
+CREATE TABLE fermtemp(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    brewname CHAR(512),
+    readingdate TIMESTAMP,
+    brewtemp DOUBLE,
+    is_active CHAR(1),
+    created_on TIMESTAMP,
+    created_by INTEGER REFERENCES auth_user (id) ON DELETE CASCADE  ,
+    modified_on TIMESTAMP,
+    modified_by INTEGER REFERENCES auth_user (id) ON DELETE CASCADE  
+);
+success!
+timestamp: 2016-06-05T17:04:53.678000
+CREATE TABLE reaminingbrew(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    brewname CHAR(512),
+    readingdate TIMESTAMP,
+    brewremaining DOUBLE,
+    is_active CHAR(1),
+    created_on TIMESTAMP,
+    created_by INTEGER REFERENCES auth_user (id) ON DELETE CASCADE  ,
+    modified_on TIMESTAMP,
+    modified_by INTEGER REFERENCES auth_user (id) ON DELETE CASCADE  
+);
+success!
+timestamp: 2016-06-05T17:06:34.174000
+CREATE TABLE brewremaining(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    brewname CHAR(512),
+    readingdate TIMESTAMP,
+    amount DOUBLE,
+    is_active CHAR(1),
+    created_on TIMESTAMP,
+    created_by INTEGER REFERENCES auth_user (id) ON DELETE CASCADE  ,
+    modified_on TIMESTAMP,
+    modified_by INTEGER REFERENCES auth_user (id) ON DELETE CASCADE  
+);
+success!
+success!

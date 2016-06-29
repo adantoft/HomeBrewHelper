@@ -1,0 +1,49 @@
+{{right_sidebar_enabled=True,('message' in globals())}}
+{{extend 'layout.html'}}
+
+{{=form}}
+
+ <table style="width:100%" table id="brewlist">
+    <tr>
+        <th>
+            Brew Name
+        </th>
+        <th>
+            Style
+        </th>
+        <th>
+            Brew Date
+        </th>
+    </tr>
+{{for row in recs:}}
+    <tr>
+         <td>
+        {{=row['brewname']}}
+        </td>
+        <td>
+        {{=row['brewstyle']}}
+        </td>
+        <td>
+        {{=row['brewdate']}}
+        </td>
+    </tr>
+{{pass}}
+</table>
+
+{{block right_sidebar}}
+<div class="panel panel-info">
+    <div class="panel-heading"><h3 class="panel-title"><a class="btn-block"
+                                                          href="{{=URL('admin','default','index')}}">
+        <i class="glyphicon glyphicon-cog"></i>
+    {{=T("admin")}}
+    </a></h3></div>
+    <div class="panel-body">
+    {{=T("Navigation")}}
+    </div>
+    <ul class="list-group">
+        <li class="list-group-item">{{=A(T("Add Brews"), _href=URL('addBrew'))}}</li>
+        <li class="list-group-item">{{=A(T("Fermentation Monitor"), _href=URL('fermentationMonitor'))}}</li>
+        <li class="list-group-item">{{=A(T("Keg Monitor"), _href=URL('howMuchIsLeft'))}}</li>
+    </ul>
+</div>
+{{end}}

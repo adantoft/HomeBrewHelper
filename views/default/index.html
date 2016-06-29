@@ -1,0 +1,58 @@
+{{left_sidebar_enabled,right_sidebar_enabled=False,('message' in globals())}}
+{{extend 'layout.html'}}
+
+{{block header}}
+<header class="container-fluid background">
+    <div class="jumbotron text-center">
+    {{if response.title:}}
+        <h1>{{=response.title}}
+            <small>{{=response.subtitle or ''}}</small>
+        </h1>
+    {{pass}}
+    </div>
+</header>
+{{end}}
+
+{{if 'message' in globals():}}
+<h2>{{=message}}</h2>
+<h5>
+    HomebrewHelper is designed to help the homebrewer keep track of the beers that have been brewed, monitor
+    fermentation temperatures, and keep an eye on how much beer is remaining in a keg. The original goal of this project
+    was to experiment with Data-Driven Documents (D3), a graphing Javascript library, and its integration with Web2Py.
+    During the coding of this project, it became obvious that the flexibility
+    with D3 is nearly limitless. The D3 functionality of this site could be fine-tuned and turned into a plugin. The
+    flexible nature of D3 does however make easy adaptability for a plugin challenging.
+</h5>
+<h5>
+    D3 examples from the web were used as starting points for the D3 functionality in this site. References are included in the source code.
+</h5>
+
+<p class="lead">{{=T('Now that you are here, what can you do?')}}</p>
+<ol>
+    <li>{{=XML(T('Add a new brew %s', A("here",_href=URL('addBrew'))))}}</li>
+    <li>{{=XML(T('Track fermentation temperatures and see a graph over time %s', A("here",_href=URL('fermentationMonitor'))))}}</li>
+    <li>{{=XML(T('Track how much homebrew is remaining in your kegs %s', A("here",_href=URL('howMuchIsLeft'))))}}</li>
+</ol>
+{{elif 'content' in globals():}}
+{{=content}}
+{{else:}}
+{{=BEAUTIFY(response._vars)}}
+{{pass}}
+
+{{block right_sidebar}}
+<div class="panel panel-info">
+    <div class="panel-heading"><h3 class="panel-title"><a class="btn-block"
+                                                          href="{{=URL('admin','default','index')}}">
+        <i class="glyphicon glyphicon-cog"></i>
+    {{=T("admin")}}
+    </a></h3></div>
+    <div class="panel-body">
+    {{=T("Navigation")}}
+    </div>
+    <ul class="list-group">
+        <li class="list-group-item">{{=A(T("Add Brews"), _href=URL('addBrew'))}}</li>
+        <li class="list-group-item">{{=A(T("Fermentation Monitor"), _href=URL('fermentationMonitor'))}}</li>
+        <li class="list-group-item">{{=A(T("Keg Monitor"), _href=URL('howMuchIsLeft'))}}</li>
+    </ul>
+</div>
+{{end}}
